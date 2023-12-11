@@ -17,6 +17,25 @@ export async function getuser() {
   return a;
 }
 
+export async function getmotherdetails(findstring) {
+  const a = await pool.query("SELECT * FROM motherdatabase WHERE Adhar LIKE ?", [`%${findstring}%`]);
+  // console.log(a[0]);
+  return a[0];
+}
+
+export async function addchild(data) {
+  const a = await pool.query("INSERT INTO childdata(ChildAdhar, ChildName, ChildNumber, DateOfBirth, MotherAdhar,DateOfRegirestion) VALUES(?,?,?,?,?,?)", [data.ChildAdhar, data.ChildName.firstName, data.ChildNumber, data.DateOfBirth, data.MotherAdhar, data.DateOfRegirestion]);
+  // console.log(a[0]);
+  return a[0];
+}
+
+export async function getchild(data) {
+  const a = await pool.query("SELECT * FROM childdata where MotherAdhar=?", [data]);
+  // console.log(a[0]);
+  return a[0];
+}
+
+
 export async function getuserId(insertId, password) {
   const a = await pool.query("select * from user where name=?", [insertId]);
   console.log(a);
@@ -62,4 +81,9 @@ export async function regUser(name, middlename, lastname, phone, email, password
   // const user = getuserId(a.insertId)
 
   return a;
+}
+
+export async function registerMotherDetails(data) {
+  const a = await pool.query("insert into motherdatabase(MotherName,Adhar,NumberOfChild,MotherAge,Address,ContactNumber) values(?,?,?,?,?,?);", [data.motherName, data.aadhaarNumber, data.NumberOfPregnancies, data.MotherAge, data.Address, data.contactNumber]);
+  return a[0];
 }

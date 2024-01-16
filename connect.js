@@ -11,6 +11,7 @@ const pool = mysql
   .promise();
 
 
+
 export async function getuser() {
   const a = await pool.query("select * from user");
   console.log(a[0]);
@@ -19,15 +20,62 @@ export async function getuser() {
 
 export async function getmotherdetails(findstring) {
   const a = await pool.query("SELECT * FROM motherdatabase WHERE Adhar LIKE ?", [`%${findstring}%`]);
+  // const a = await pool.query("SELECT * FROM motherdatabase")
   // console.log(a[0]);
   return a[0];
 }
 
+export async function getmotherSingledetails(findstring) {
+  const a = await pool.query("SELECT * FROM motherdatabase WHERE Adhar = ?", [findstring]);
+  console.log(a);
+  return a[0];
+}
+
 export async function addchild(data) {
-  const a = await pool.query("INSERT INTO childdata(ChildAdhar, ChildName, ChildNumber, DateOfBirth, MotherAdhar,DateOfRegirestion) VALUES(?,?,?,?,?,?)", [data.ChildAdhar, data.ChildName.firstName, data.ChildNumber, data.DateOfBirth, data.MotherAdhar, data.DateOfRegirestion]);
+
+  const ifANYchild = await pool.query("select COUNT(*) from childdata  where MotherAdhar =?", [data.MotherAdher])
+  let myObject = ifANYchild[0][0]
+
+  let countValue = myObject['COUNT(*)']
+
+  let childcount = 1;
+  childcount = childcount + countValue
+  console.log(childcount)
+  const a = await pool.query("INSERT INTO childdata(BirthWeight, CSection, ClinicalDelivery, DateOfBirth,HomeDelivery, Lastname, Middlename, MotherAdhar, PerTerm, PlaceOfBirth, name,ChildUID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)", [data.BirthWeight,
+  data.CSection,
+  data.ClinicalDelivery,
+  data.DateOfBirth,
+  data.HomeDelivery,
+  data.Lastname,
+  data.Middlename,
+  data.MotherAdher,
+  data.PerTerm,
+  data.PlaceOfBirth,
+  data.name,
+  `${data.MotherAdher}0${childcount}`]);
+  console.log(a[0]);
+  return a[0];
+}
+
+
+export async function giveBirthFile(data) {
+  const a = await pool.query("INSERT INTO birth (ChildUID, OpvZero, OpvZeroDelayReason, HepB, HepBDelayReason, Bcg, BcgDelayReason, PractitionerUID) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", [
+    data.ChildUID,
+    data.OpvZero,
+    data.OpvZeroDelayReason,
+    data.HepB,
+    data.HepBDelayReason,
+    data.Bcg,
+    data.BcgDelayReason,
+    data.PractitionerUID]);
   // console.log(a[0]);
   return a[0];
 }
+
+
+
+
+
 
 export async function getchild(data) {
   const a = await pool.query("SELECT * FROM childdata where MotherAdhar=?", [data]);
@@ -56,7 +104,6 @@ export async function checkUser(insertId, password) {
 
 }
 
-
 export async function createUser(name, password) {
   const salt = await bcrypt.genSalt(5)
   const hashed = await bcrypt.hash(password, salt)
@@ -83,7 +130,10 @@ export async function regUser(name, middlename, lastname, phone, email, password
   return a;
 }
 
+
+
+
 export async function registerMotherDetails(data) {
-  const a = await pool.query("insert into motherdatabase(MotherName,Adhar,NumberOfChild,MotherAge,Address,ContactNumber) values(?,?,?,?,?,?);", [data.motherName, data.aadhaarNumber, data.NumberOfPregnancies, data.MotherAge, data.Address, data.contactNumber]);
+  const a = await pool.query("insert into motherdatabase(MotherName,Adhar,MotherAge,Address,ContactNumber) values(?,?,?,?,?);", [data.motherName, data.aadhaarNumber, data.MotherAge, data.Address, data.contactNumber]);
   return a[0];
 }

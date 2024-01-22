@@ -59,7 +59,7 @@ export async function addchild(data) {
 
 
 export async function giveBirthFile(data) {
-  const a = await pool.query("INSERT INTO birth (ChildUID, OpvZero, OpvZeroDelayReason, HepB, HepBDelayReason, Bcg, BcgDelayReason, PractitionerUID) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", [
+  const a = await pool.query("INSERT INTO birth (ChildUID, OpvZero, OpvZeroDelayReason, HepB, HepBDelayReason, Bcg, BcgDelayReason, PractitionerUID,height,weight) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?,?)", [
     data.ChildUID,
     data.OpvZero,
     data.OpvZeroDelayReason,
@@ -67,14 +67,46 @@ export async function giveBirthFile(data) {
     data.HepBDelayReason,
     data.Bcg,
     data.BcgDelayReason,
-    data.PractitionerUID]);
-  // console.log(a[0]);
+    data.PractitionerUID,
+    data.height,
+    data.weight]);
+
+  const b = await pool.query("UPDATE childdata SET GrowthStatus = ? WHERE ChildUID = ?", ['ONE MONTH', data.ChildUID]);
+  console.log(b);
+
+  // console.log(a[0]); 
+
   return a[0];
 }
 
 
+export async function giveonemonth(data) {
+  const a = await pool.query(
+    "INSERT INTO onemonth (ChildUID, OpvOne, OpvOneDelayReason, PentaOne, PentaOneDelayReason, RotaOne, RotaOneDelayReason, PcvOne, PcvOneDelayReason, IpvOne, IpvOneDelayReason, PractitionerUID, height, weight) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+    [
+      data.ChildUID,
+      data.OpvOne,
+      data.OpvOneDelayReason,
+      data.PentaOne,
+      data.PentaOneDelayReason,
+      data.RotaOne,
+      data.RotaOneDelayReason,
+      data.PcvOne,
+      data.PcvOneDelayReason,
+      data.IpvOne,
+      data.IpvOneDelayReason,
+      data.PractitionerUID,
+      data.height,
+      data.weight
+    ]
+  );
 
+  const b = await pool.query("UPDATE childdata SET GrowthStatus = ? WHERE ChildUID = ?", ['TWO MONTHS', data.ChildUID]);
 
+  console.log(b);
+
+  return a[0];
+}
 
 
 export async function getchild(data) {
@@ -129,8 +161,6 @@ export async function regUser(name, middlename, lastname, phone, email, password
 
   return a;
 }
-
-
 
 
 export async function registerMotherDetails(data) {

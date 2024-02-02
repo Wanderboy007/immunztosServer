@@ -10,23 +10,21 @@ const pool = mysql
   })
   .promise();
 
-
-
-export async function getuser() {
-  const a = await pool.query("select * from user");
-  console.log(a[0]);
-  return a;
-}
-
 export async function getmotherdetails(findstring) {
   const a = await pool.query("SELECT * FROM motherdatabase WHERE Adhar LIKE ?", [`%${findstring}%`]);
-  // const a = await pool.query("SELECT * FROM motherdatabase")
-  // console.log(a[0]);
+
+  console.log(a[0]);
   return a[0];
 }
 
 export async function getmotherSingledetails(findstring) {
   const a = await pool.query("SELECT * FROM motherdatabase WHERE Adhar = ?", [findstring]);
+  console.log(a);
+  return a[0];
+}
+
+export async function getbirthdata(data) {
+  const a = await pool.query("SELECT * FROM birth WHERE ChildUID = ?", [data]);
   console.log(a);
   return a[0];
 }
@@ -115,6 +113,12 @@ export async function getchild(data) {
   return a[0];
 }
 
+export async function getchildfromchilduid(data) {
+  const a = await pool.query("SELECT * FROM childdata where ChildUID=?", [data]);
+  // console.log(a[0]);
+  return a[0];
+}
+
 
 export async function getuserId(insertId, password) {
   const a = await pool.query("select * from user where name=?", [insertId]);
@@ -166,4 +170,37 @@ export async function regUser(name, middlename, lastname, phone, email, password
 export async function registerMotherDetails(data) {
   const a = await pool.query("insert into motherdatabase(MotherName,Adhar,MotherAge,Address,ContactNumber) values(?,?,?,?,?);", [data.motherName, data.aadhaarNumber, data.MotherAge, data.Address, data.contactNumber]);
   return a[0];
+}
+
+
+
+
+
+export async function registerpractitionerdetails(data) {
+
+  const salt = await bcrypt.genSalt(5)
+  const hashed = await bcrypt.hash(data.Password, salt)
+
+  const RandomOTP = Math.round(Math.random(2) * 10000)
+  const a = pool.query("INSERT INTO practitionerdetails (FirstName, MiddleName, LastName, PractitionerUID, Phone, Email, Password, InstitutionID, MedicalOfficerID,practitionerOTP)VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?,?)", [data.FirstName, data.MiddleName, data.LastName, data.PractitionerUID, data.Phone, data.Email, hashed, data.InstitutionID, data.MedicalOfficerID, RandomOTP]);
+
+  return a;
+}
+
+
+export async function checkloginpractitionerdetails(data) {
+
+  // const salt = await bcrypt.genSalt(5)
+  // const hashed = await bcrypt.hash(data.Password, salt)
+
+  // const RandomOTP = Math.round(Math.random(2) * 10000)
+  // const a = pool.query("INSERT INTO practitionerdetails (FirstName, MiddleName, LastName, PractitionerUID, Phone, Email, Password, InstitutionID, MedicalOfficerID,practitionerOTP)VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?,?)", [data.FirstName, data.MiddleName, data.LastName, data.PractitionerUID, data.Phone, data.Email, hashed, data.InstitutionID, data.MedicalOfficerID, RandomOTP]);
+
+  const a = await pool.query("SELECT FirstName FROM practitionerdetails WHERE PractitionerUID = ?", [data.UID])
+  if (a[0].length === 0) {
+    return false
+  }
+  else {
+    return true
+  }
 }

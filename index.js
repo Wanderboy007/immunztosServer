@@ -1,13 +1,15 @@
 import express from "express";
 import cors from "cors"
-import { getmotherdetails, registerMotherDetails, addchild, getchild, getmotherSingledetails, giveBirthFile } from "./connect.js";
+import { getmotherdetails, getchildfromchilduid, registerMotherDetails, addchild, getchild, getmotherSingledetails, giveBirthFile } from "./connect.js";
 import vaccin from "./routes/vaccin.js";
+import practitionerUser from "./routes/practitionerUser.js"
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
 app.use('/vaccin', vaccin)
+app.use('/practitionerUser', practitionerUser)
 
 // import mysql from "mysql2";
 
@@ -127,6 +129,13 @@ app.get("/api/getchild", async (req, res) => {
   const { MotherAdhar } = req.query;
   // console.log(MotherAdhar)
   const a = await getchild(MotherAdhar)
+  res.status(200).send(a);
+})
+
+app.get("/api/getchildbyuid", async (req, res) => {
+  const { childuid } = req.query;
+  // console.log(MotherAdhar)
+  const a = await getchildfromchilduid(childuid)
   res.status(200).send(a);
 })
 

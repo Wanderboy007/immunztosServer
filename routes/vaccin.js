@@ -1,10 +1,9 @@
 import express from "express";
-import { giveBirthFile, giveonemonth } from "../connect.js";
+import { giveBirthFile, giveonemonth, getbirthdata } from "../connect.js";
 const router = express.Router();
+
+
 //give birth vaccin 
-
-
-
 
 router.post("/birth", async (req, res) => {
     try {
@@ -84,6 +83,14 @@ router.post("/onemonth", async (req, res) => {
     }
 
 });
+
+router.get("/birth", async (req, res) => {
+    const { childuid } = req.query;
+    const birthdata = await getbirthdata(childuid)
+    res.send(birthdata)
+})
+
+
 
 export default router;
 

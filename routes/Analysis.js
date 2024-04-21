@@ -35,12 +35,14 @@ router.get('/practitionersession', async function (req, res) {
 });
 
 
-router.get('/noofbeneficiarieslessthanoneyearofage', async function (req, res) {
+router.get('/noofbeneficiaries', async function (req, res) {
     // res.status(200).send("hi");
     async function noofbeneficiaries() {
-        const a = await pool.query(`select count( distinct tbl.EachTableCount) from ( select ChildUID as EachTableCount from birth where practitionerUID = 'UID' UNION ALL select ChildUID as EachTableCount from onemonth where practitionerUID = 'UID' UNION ALL select ChildUID as EachTableCount from twomonth where practitionerUID = 'UID' UNION ALL select ChildUID as EachTableCount from threemonths where practitionerUID = 'UID' UNION ALL select ChildUID as EachTableCount from ninemonths where practitionerUID = 'UID' )tbl`);
-        console.log(a[0]);
-        res.status(200).send(a[0]);
+        const query = `select count( distinct tbl.EachTableCount) from ( select ChildUID as EachTableCount from birth where practitionerUID = 'PID001' UNION ALL select ChildUID as EachTableCount from onemonth where practitionerUID = 'PID001' UNION ALL select ChildUID as EachTableCount from twomonth where practitionerUID = 'PID001' UNION ALL select ChildUID as EachTableCount from threemonths where practitionerUID = 'PID001' UNION ALL select ChildUID as EachTableCount from ninemonths where practitionerUID = 'PID001' )tbl`;
+        const values = Array(5).fill("PID001");
+        const result = await pool.query(query, values);
+        console.log(result[0]);
+        res.status(200).send(result[0]);
     }
     noofbeneficiaries();
     res.status(404);
@@ -50,9 +52,11 @@ router.get('/noofbeneficiarieslessthanoneyearofage', async function (req, res) {
 router.get('/noofbeneficiariesbetweenoneandtwoyearsofage', async function (req, res) {
     // res.status(200).send("hi");
     async function noofbeneficiariesbetweenoneandtwoyearsofage() {
-        const a = await pool.query(`select count( distinct tbl.EachTableCount) from ( select ChildUID as EachTableCount from birth where practitionerUID = 'UID' UNION ALL select ChildUID as EachTableCount from onemonth where practitionerUID = 'UID' UNION ALL select ChildUID as EachTableCount from twomonth where practitionerUID = 'UID' UNION ALL select ChildUID as EachTableCount from threemonths where practitionerUID = 'UID' UNION ALL select ChildUID as EachTableCount from ninemonths where practitionerUID = 'UID' )tbl`);
-        console.log(a[0]);
-        res.status(200).send(a[0]);
+        const query = `select count( distinct tbl.EachTableCount) from ( select ChildUID as EachTableCount from birth where practitionerUID = 'PID001' UNION ALL select ChildUID as EachTableCount from onemonth where practitionerUID = 'PID001' UNION ALL select ChildUID as EachTableCount from twomonth where practitionerUID = 'PID001' UNION ALL select ChildUID as EachTableCount from threemonths where practitionerUID = 'PID001' UNION ALL select ChildUID as EachTableCount from ninemonths where practitionerUID = 'PID001' )tbl`;
+        const values = Array(5).fill("PID001");
+        const result = await pool.query(query, values);
+        console.log(result[0]);
+        res.status(200).send(result[0]);
     }
     noofbeneficiariesbetweenoneandtwoyearsofage();
     res.status(404);
@@ -62,14 +66,36 @@ router.get('/getcumulativenoofaparticularvaccine', async function (req, res) {
     // res.status(200).send("hi");
     async function getcumulativenoofaparticularvaccine() {
         const practitionerUID = "PID001";
-        const query = `SELECT SUM(OpvCount) AS TotalCount FROM ( SELECT COUNT(OpvZero) AS OpvCount FROM birth WHERE practitionerUID = ? UNION ALL SELECT COUNT(OpvOne) AS OpvCount FROM onemonth WHERE practitionerUID = ? ) AS combined_counts;`;
+        const query = `SELECT * FROM ( SELECT COUNT(OpvZero) FROM birth WHERE practitionerUID = ? UNION ALL SELECT COUNT(OpvOne) FROM onemonth WHERE practitionerUID = ?);`;
         const values = Array(2).fill(practitionerUID);
 
         const result = await pool.query(query, values);
-        res.status(200).send(result);
+        res.status(200).send(result[0]);
     }
     getcumulativenoofaparticularvaccine();
     res.status(404);
 });
+
+
+router.get('/getcumulativenoofopvzero', async function (req, res) {
+    // res.status(200).send("hi"); 
+    const { practitionerUID } = req.query;
+    // console.log(practitionerUID)
+    async function getcumulativenoofopvzero() {
+        const query1 = `select count(ChildUID) as opvzero from birth where OpvZero is not NULL and practitionerUID = ?`;
+        const query2 = `select count(ChildUID) as HepB from birth where HepB is not NULL and practitionerUID = ?`;
+        const query3 = `select count(ChildUID) as Bcg from birth where Bcg is not NULL and practitionerUID = ?`;
+        // const values = Array(2).fill(practitionerUID);
+
+        const result1 = await pool.query(query1, practitionerUID);
+        const result2 = await pool.query(query2, practitionerUID);
+        const result3 = await pool.query(query3, practitionerUID);
+        res.status(200).send({ result: [{ "name": "OPV", count: result1[0][0].opvzero }, { "name": "HepB", count: result2[0][0].HepB }, { "name": "Bcg", count: result3[0][0].Bcg }] });
+    }
+    getcumulativenoofopvzero();
+    res.status(404);
+});
+
+
 
 export default router;

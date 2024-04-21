@@ -103,8 +103,164 @@ export async function giveonemonth(data) {
 
   console.log(b);
 
+  return b[0];
+}
+
+
+export async function givetwomonths(data) {
+  const a = await pool.query(
+    "INSERT INTO twomonth (ChildUID, OpvTwo,OpvTwoDelayReason, PentaTwo, PentaTwoDelayReason, RotaTwo, RotaTwoDelayReason, PractitionerUID, height, weight) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+    [
+      data.ChildUID,
+      data.OpvTwo,
+      data.OpvTwoDelayReason,
+      data.PentaTwo,
+      data.PentaTwoDelayReason,
+      data.RotaTwo,
+      data.RotaTwoDelayReason,
+      data.PractitionerUID,
+      data.height,
+      data.weight
+    ]
+  );
+
+  const b = await pool.query("UPDATE childdata SET GrowthStatus = ? WHERE ChildUID = ?", ['TWO MONTHS', data.ChildUID]);
+
+  console.log(b);
+
   return a[0];
 }
+
+
+export async function givethreemonths(data) {
+  try {
+    const a = await pool.query(
+      "INSERT INTO threemonths (ChildUID, OpvThree, OpvThreeDelayReason, PentaThree, PentaThreeDelayReason, RotaThree, RotaThreeDelayReason, PractitionerUID, height, weight) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      [
+        data.ChildUID,
+        data.OpvThree,
+        data.OpvThreeDelayReason,
+        data.PentaThree,
+        data.PentaThreeDelayReason,
+        data.RotaThree,
+        data.RotaThreeDelayReason,
+        data.PractitionerUID,
+        data.height,
+        data.weight
+      ]
+    );
+
+    const b = await pool.query("UPDATE childdata SET GrowthStatus = ? WHERE ChildUID = ?", ['THREE MONTHS', data.ChildUID]);
+
+    console.log(b);
+
+    return b[0];
+  } catch (error) {
+    // Handle error
+    console.error(error);
+    throw error;
+  }
+}
+
+
+
+export async function giveninemonth(data) {
+  try {
+    const a = await pool.query(
+      "INSERT INTO ninemonths (ChildUID, MrOne, MrOneDelayReason, JeOne, JeOneDelayReason, VitaminAOne, VitaminAOneDelayReason, PcvThree, PcvThreeDelayReason, PractitionerUID, height, huac, weight, Growthstatus) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      [
+        data.ChildUID,
+        data.MrOne,
+        data.MrOneDelayReason,
+        data.JeOne,
+        data.JeOneDelayReason,
+        data.VitaminAOne,
+        data.VitaminAOneDelayReason,
+        data.PcvThree,
+        data.PcvThreeDelayReason,
+        data.PractitionerUID,
+        data.height,
+        data.huac,
+        data.weight,
+        data.Growthstatus
+      ]
+    );
+
+    const b = await pool.query("UPDATE childdata SET GrowthStatus = ? WHERE ChildUID = ?", ['SIXTEEN MONTHS', data.ChildUID]);
+
+    console.log(b);
+
+    return b[0];
+  } catch (error) {
+    // Handle error
+    console.error(error);
+    throw error;
+  }
+}
+
+export async function givesixteenmonth(data) {
+  try {
+    const a = await pool.query(
+      "INSERT INTO sixteenmonths (ChildUID, MrTwo, MrTwoDelayReason, JeTwo, JeTwoDelayReason, VitaminATwo, VitaminATwoDelayReason, OpvBooster, OpvBoosterDelayReason, PractitionerUID, height, huac, weight, Growthstatus) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      [
+        data.ChildUID,
+        data.MrTwo,
+        data.MrTwoDelayReason,
+        data.JeTwo,
+        data.JeTwoDelayReason,
+        data.VitaminATwo,
+        data.VitaminATwoDelayReason,
+        data.OpvBooster,
+        data.OpvBoosterDelayReason,
+        data.PractitionerUID,
+        data.height,
+        data.huac,
+        data.weight,
+        data.Growthstatus
+      ]
+    );
+
+    const b = await pool.query("UPDATE childdata SET GrowthStatus = ? WHERE ChildUID = ?", ['SIX YEARS', data.ChildUID]);
+
+    console.log(b);
+
+    return b[0];
+  } catch (error) {
+    // Handle error
+    console.error(error);
+    throw error;
+  }
+}
+
+export async function givesixyears(data) {
+  try {
+    const a = await pool.query(
+      "INSERT INTO sixyears (ChildUID, DptBoosterTwo, DptBoosterTwoDelayReason, PractitionerUID, height, huac, weight, Growthstatus) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+      [
+        data.ChildUID,
+        data.DptBoosterTwo,
+        data.DptBoosterTwoDelayReason,
+        data.PractitionerUID,
+        data.height,
+        data.huac,
+        data.weight,
+        data.Growthstatus
+      ]
+    );
+
+    const b = await pool.query("UPDATE childdata SET GrowthStatus = ? WHERE ChildUID = ?", ['SIX YEARS', data.ChildUID]);
+
+    console.log(b);
+
+    return b[0];
+  } catch (error) {
+    // Handle error
+    console.error(error);
+    throw error;
+  }
+}
+
+
 
 
 export async function getchild(data) {

@@ -185,7 +185,7 @@ app.post("/api/addchild", async (req, res) => {
 
 
 app.listen(5000, () => {
-  console.log("server is up");
+  console.log("server is running");
 });
 
 

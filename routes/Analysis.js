@@ -77,7 +77,7 @@ router.get('/getcumulativenoofaparticularvaccine', async function (req, res) {
 });
 
 
-router.get('/getcumulativenoofopvzero', async function (req, res) {
+router.get('/getcumulativenoofbirth', async function (req, res) {
     // res.status(200).send("hi"); 
     const { practitionerUID } = req.query;
     // console.log(practitionerUID)

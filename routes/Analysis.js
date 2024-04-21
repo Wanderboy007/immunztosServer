@@ -96,6 +96,29 @@ router.get('/getcumulativenoofbirth', async function (req, res) {
     res.status(404);
 });
 
+router.get('/getcumulativenoofoneMonth', async function (req, res) {
+    // res.status(200).send("hi"); 
+    const { practitionerUID } = req.query;
+    // console.log(practitionerUID)
+    async function getcumulativenoofopvzero() {
+        const query1 = `select count(ChildUID) as OpvOne from onemonth where OpvOne is not NULL and practitionerUID = ?`;
+        const query2 = `select count(ChildUID) as PentaOne from onemonth where PentaOne is not NULL and practitionerUID = ?`;
+        const query3 = `select count(ChildUID) as RotaOne from onemonth where RotaOne is not NULL and practitionerUID = ?`;
+        const query4 = `select count(ChildUID) as PcvOne from onemonth where PcvOne is not NULL and practitionerUID = ?`;
+        const query5 = `select count(ChildUID) as IpvOne from onemonth where IpvOne is not NULL and practitionerUID = ?`;
+        // const values = Array(2).fill(practitionerUID);
+
+        const result1 = await pool.query(query1, practitionerUID);
+        const result2 = await pool.query(query2, practitionerUID);
+        const result3 = await pool.query(query3, practitionerUID);
+        const result4 = await pool.query(query4, practitionerUID);
+        const result5 = await pool.query(query5, practitionerUID);
+        res.status(200).send({ result: [{ "name": "OpvOne", count: result1[0][0].OpvOne }, { "name": "PentaOne", count: result2[0][0].PentaOne }, { "name": "RotaOne", count: result3[0][0].RotaOne }, { "name": "PcvOne", count: result4[0][0].PcvOne }, { "name": "IpvOne", count: result5[0][0].IpvOne }] });
+    }
+    getcumulativenoofopvzero();
+    res.status(404);
+});
+
 
 
 export default router;

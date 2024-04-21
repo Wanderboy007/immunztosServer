@@ -10,6 +10,8 @@ const pool = mysql
   })
   .promise();
 
+export default pool;
+
 export async function getmotherdetails(findstring) {
   const a = await pool.query("SELECT * FROM motherdatabase WHERE Adhar LIKE ?", [`%${findstring}%`]);
 

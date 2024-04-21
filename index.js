@@ -3,6 +3,7 @@ import cors from "cors"
 import { getmotherdetails, getchildfromchilduid, registerMotherDetails, addchild, getchild, getmotherSingledetails, giveBirthFile } from "./connect.js";
 import vaccin from "./routes/vaccin.js";
 import practitionerUser from "./routes/practitionerUser.js"
+import Analysis from "./routes/Analysis.js"
 
 const app = express();
 app.use(express.json());
@@ -10,19 +11,7 @@ app.use(cors());
 
 app.use('/vaccin', vaccin)
 app.use('/practitionerUser', practitionerUser)
-
-// import mysql from "mysql2";
-
-// const db = mysql
-//   .createPool({
-//     host: "localhost",
-//     user: "root",
-//     password: "b2fool",
-//     database: "immu",
-//   })
-//   .promise();
-
-
+app.use('/Analysis', Analysis)
 
 // const verifyuser = (req, res, next) => {
 //   const token = req.cookies.token;
@@ -179,9 +168,6 @@ app.post("/api/addchild", async (req, res) => {
   }
 
 });
-
-
-
 
 
 app.listen(5000, () => {

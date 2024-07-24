@@ -21,6 +21,7 @@ app.post("/api/forgetpass", async (req, res) => {
   const otp2 = Math.floor(otp)
   console.log(otp2)
   sendEmail(email, text)
+  //hat be 
   res.status(201).send(`${otp2}`)
 })
 
